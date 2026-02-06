@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:components="clr-namespace:SillowApp.Components"
+             x:Class="SillowApp.Views.CalendarPage"
+             Title="Calendar"
+             BackgroundColor="#101728">
+
+    <Grid x:Name="MainGrid">
+
+        <Button x:Name="HamburgerButton" 
+                Text="&#xE700;" 
+                FontFamily="Segoe MDL2 Assets" 
+                Clicked="HamburgerButton_Clicked"
+                HorizontalOptions="Start" 
+                VerticalOptions="Start"
+                Margin="10" 
+                BackgroundColor="#1E293B"
+                TextColor="White"
+                CornerRadius="8"
+                Padding="10,0"
+                HeightRequest="40"
+                WidthRequest="40"
+                ZIndex="10" 
+                IsVisible="False"/>
+
+        <components:NavMenu x:Name="NavMenuComponent" 
+                            Grid.Column="0" 
+                            ZIndex="5" 
+                            TranslationX="-200" 
+                            WidthRequest="200"
+                            HorizontalOptions="Start"/>
+
+        <ScrollView x:Name="CalendarContent" Grid.Column="0">
+            <VerticalStackLayout Padding="20" Spacing="18" Opacity="0.4">
+
+                <VerticalStackLayout Spacing="1">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label x:Name="PageTitle" Text="Calendar" FontSize="32" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
+                        <Button Text="+ Add Event" BackgroundColor="#F4A825" TextColor="White" FontAttributes="Bold" Padding="16,8" CornerRadius="8" Grid.Column="1"/>
+                    </Grid>
+                    <Label Text="View and manage your monthly schedule" FontSize="14" TextColor="#94A3B8"/>
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Spacing="10">
+                    <Button Text="&#xE8FD; Month View" FontFamily="Segoe MDL2 Assets" BackgroundColor="#334155" TextColor="White" Padding="10,5" CornerRadius="6" BorderColor="White" FontSize="14"/>
+                    <Button Text="&#xE7EF; Week View" FontFamily="Segoe MDL2 Assets" BackgroundColor="#1E293B" TextColor="White" Padding="10,5" CornerRadius="6" BorderColor="White" FontSize="14"/>
+                </HorizontalStackLayout>
+
+                <Frame BackgroundColor="#1E293B" CornerRadius="12" Padding="10" HasShadow="False" BorderColor="White" HeightRequest="600">
+                    <Label Text="Monthly Calendar View Placeholder" TextColor="#94A3B8" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20"/>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Grid x:Name="Overlay" BackgroundColor="#AA000000" IsVisible="True" Grid.Column="1" ZIndex="20" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+            <VerticalStackLayout VerticalOptions="Center"
+                 HorizontalOptions="Center"
+                 Spacing="20">
+                <Frame BackgroundColor="#1E293B" CornerRadius="12" Padding="20" HasShadow="True">
+                    <VerticalStackLayout Spacing="12"
+                         HorizontalOptions="Center">
+                        <Label Text="Page Not Available"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+                        <Label Text="This feature will be available in a future version."
+                           FontSize="14"
+                           TextColor="#94A3B8"
+                           HorizontalOptions="Center" />
+                        <Button x:Name="OverlayButton"
+                            Text="OK"
+                            BackgroundColor="#f59e0b"
+                            TextColor="White"
+                            Padding="12,6"
+                            CornerRadius="8"
+                            Clicked="OverlayButton_Clicked"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

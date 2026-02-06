@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:components="clr-namespace:SillowApp.Components"
+             x:Class="SillowApp.Views.TeamPage"
+             Title="Team"
+             BackgroundColor="#101728">
+
+    <Grid x:Name="MainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Button x:Name="HamburgerButton" Text="☰" Clicked="HamburgerButton_Clicked" 
+                HorizontalOptions="Start" VerticalOptions="Start" Margin="15" WidthRequest="50" HeightRequest="50"          
+                BackgroundColor="#1e293b" CornerRadius="8" TextColor="White" FontSize="32" FontAttributes="Bold"
+                Padding="0" ZIndex="100" />
+
+        <components:NavMenu x:Name="NavMenuComponent" 
+                            Grid.Column="0" 
+                            ZIndex="5" 
+                            TranslationX="-200" 
+                            WidthRequest="200"
+                            HorizontalOptions="Start"/>
+
+        <ScrollView x:Name="TeamContent" Grid.Column="0">
+            <VerticalStackLayout Spacing="28" Padding="20" Opacity="0.4">
+
+                <VerticalStackLayout Spacing="1">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Team &amp; Time Tracking" FontSize="32" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
+                        <Button Text="+ Log Time" BackgroundColor="#a855f7" TextColor="White" FontAttributes="Bold" Padding="16,8" CornerRadius="8" Grid.Column="1"/>
+                    </Grid>
+                    <Label Text="Manage time entries and track productivity" FontSize="14" TextColor="#94A3B8"/>
+                </VerticalStackLayout>
+
+                <Grid RowSpacing="12" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="#1e293b" Padding="16" CornerRadius="12" HasShadow="True">
+                        <VerticalStackLayout Spacing="4">
+                            <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                                <Label Text="Total Hours" FontSize="12" TextColor="#94a3b8" />
+                                <Label Text="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="12" TextColor="#94a3b8"/>
+                            </HorizontalStackLayout>
+                            <Label Text="[TotalHours]h" FontSize="20" TextColor="White" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                    <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="#1e293b" Padding="16" CornerRadius="12" HasShadow="True">
+                        <VerticalStackLayout Spacing="4">
+                            <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                                <Label Text="Billable Hours" FontSize="12" TextColor="#94a3b8"/>
+                                <Label Text="&#xE916;" FontFamily="Segoe MDL2 Assets" FontSize="12" TextColor="#94a3b8"/>
+                            </HorizontalStackLayout>
+                            <Label Text="[BillableHours]h" FontSize="20" TextColor="#22c55e" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                    <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="#1e293b" Padding="16" CornerRadius="12" HasShadow="True">
+                        <VerticalStackLayout Spacing="4">
+                            <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                                <Label Text="Today's Hours" FontSize="12" TextColor="#94a3b8"/>
+                                <Label Text="&#xE787;" FontFamily="Segoe MDL2 Assets" FontSize="12" TextColor="#94a3b8"/>
+                            </HorizontalStackLayout>
+                            <Label Text="[TodaysHours]h" FontSize="20" TextColor="#fbbf24" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                    <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="#1e293b" Padding="16" CornerRadius="12" HasShadow="True">
+                        <VerticalStackLayout Spacing="4">
+                            <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                                <Label Text="Total Earnings" FontSize="12" TextColor="#94a3b8"/>
+                                <Label Text="&#xE8D4;" FontFamily="Segoe MDL2 Assets" FontSize="12" TextColor="#94a3b8"/>
+                            </HorizontalStackLayout>
+                            <Label Text="[$TotalEarnings]" FontSize="20" TextColor="#a855f7" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <HorizontalStackLayout Spacing="12">
+                    <Button Text="Timesheet"
+                            BackgroundColor="#334155" TextColor="White" CornerRadius="8" Padding="14,6" FontAttributes="Bold"/>
+                    <Button Text="Time Tracker"
+                            BackgroundColor="Transparent" TextColor="#94a3b8" BorderColor="#334155" BorderWidth="1" CornerRadius="8" Padding="14,6" FontAttributes="Bold"/>
+                </HorizontalStackLayout>
+
+                <Frame BorderColor="White" CornerRadius="8" Padding="0" HasShadow="False" BackgroundColor="Transparent" Margin="0">
+                    <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto" ColumnSpacing="10" Padding="10">
+                        <Frame Grid.Column="0" BorderColor="DarkGrey" CornerRadius="6" Padding="10,0" HasShadow="False" BackgroundColor="#1E293B" HeightRequest="42" VerticalOptions="Center">
+                            <Grid ColumnDefinitions="Auto,*" VerticalOptions="Center" >
+                                <Label Text="&#xE721;" FontFamily="Segoe MDL2 Assets" TextColor="#94A3B8" VerticalOptions="Center" Margin="0,0,8,0"/>
+                                <Entry Placeholder="Search jobs, clients, or addresses..." BackgroundColor="Transparent" TextColor="White" PlaceholderColor="#94A3B8" VerticalOptions="Center" Grid.Column="1" Margin="0,0,0,5" HeightRequest="42"/>
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </Frame>
+
+                <Frame BackgroundColor="#1E293B" CornerRadius="12" Padding="20" HasShadow="False" BorderColor="White" HeightRequest="250">
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        <HorizontalStackLayout Grid.Row="0" Spacing="8" VerticalOptions="Start">
+                            <Label Text="&#xE823;" FontFamily="Segoe MDL2 Assets" TextColor="#F4A825" FontSize="24" VerticalOptions="Center"/>
+                            <Label Text="Time Entries ([TimeEntriesCount])" TextColor="White" FontSize="24" FontAttributes="Bold" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                            <Label Text="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="32" TextColor="#64748B" HorizontalOptions="Center"/>
+                            <Label Text="No time entries found" FontSize="14" TextColor="#64748B" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid x:Name="Overlay"
+              BackgroundColor="#AA000000" 
+            IsVisible="True"
+              Grid.ColumnSpan="2">
+
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+                <Frame BackgroundColor="#1E293B" CornerRadius="12" Padding="20" HasShadow="True">
+                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                        <Label Text="Page Not Available" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                        <Label Text="This feature will be available in a future version." FontSize="14" TextColor="#94A3B8" HorizontalOptions="Center"/>
+                        <Button x:Name="OverlayButton" Text="OK" BackgroundColor="#f59e0b" TextColor="White" Padding="12,6" CornerRadius="8"
+                                Clicked="OverlayButton_Clicked"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </Grid>
+
+    </Grid>
+</ContentPage>

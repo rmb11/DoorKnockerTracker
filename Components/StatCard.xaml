@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SillowApp.Components.StatCard">
+    <Frame CornerRadius="12" Padding="12" BackgroundColor="#F5F5F5" HasShadow="True">
+        <StackLayout>
+            <Label Text="Stat Title" FontAttributes="Bold" FontSize="14" TextColor="Gray"/>
+            <Label Text="123" FontSize="28" FontAttributes="Bold" TextColor="Black"/>
+        </StackLayout>
+    </Frame>
+</ContentView>

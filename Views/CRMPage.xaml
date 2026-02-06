@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:components="clr-namespace:SillowApp.Components"
+             x:Class="SillowApp.Views.CRMPage"
+             Title="CRMPage"
+             BackgroundColor="#101728">
+
+    <Grid x:Name="MainGrid">
+
+        <Button x:Name="HamburgerButton" Text="☰" Clicked="HamburgerButton_Clicked" 
+        HorizontalOptions="Start" VerticalOptions="Start" Margin="15" WidthRequest="50" HeightRequest="50"          
+        BackgroundColor="#1e293b" CornerRadius="8" TextColor="White" FontSize="32" FontAttributes="Bold"
+        Padding="0" ZIndex="100" />
+
+        <components:NavMenu x:Name="NavMenuComponent" 
+                            Grid.Column="0" 
+                            ZIndex="5" 
+                            TranslationX="-200" 
+                            WidthRequest="200"
+                            HorizontalOptions="Start"/>
+
+        <ScrollView x:Name="CrmContent" Grid.Column="0">
+            <VerticalStackLayout Padding="20" Spacing="18" Opacity="0.4">
+
+                <VerticalStackLayout Spacing="1">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label x:Name="PageTitle" Text="CRM" FontSize="32" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
+                        <Button Text="+ Add Client" BackgroundColor="#22c55e" TextColor="White" FontAttributes="Bold" Padding="16,8" CornerRadius="8" Grid.Column="1"/>
+                    </Grid>
+                    <Label Text="Manage your customer relationships" FontSize="14" TextColor="#94A3B8"/>
+                </VerticalStackLayout>
+
+                <Frame BorderColor="White" CornerRadius="8" Padding="0" HasShadow="False" BackgroundColor="Transparent" Margin="0">
+                    <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto" ColumnSpacing="10" Padding="10">
+
+                        <Frame Grid.Column="0" BorderColor="DarkGrey" CornerRadius="6" Padding="10,0" HasShadow="False" BackgroundColor="#1E293B" HeightRequest="42" VerticalOptions="Center">
+                            <Grid ColumnDefinitions="Auto,*" VerticalOptions="Center" >
+                                <Label Text="&#xE8B6;" FontFamily="MaterialIcons"  TextColor="#94A3B8" VerticalOptions="Center" Margin="0,0,8,0"/>
+                                <Entry Placeholder="Search jobs, clients, or addresses..." BackgroundColor="Transparent" TextColor="White" PlaceholderColor="#94A3B8" VerticalOptions="Center" Grid.Column="1" Margin="0,0,0,5" HeightRequest="42" Text="[SearchText]"/>
+                            </Grid>
+                        </Frame>
+
+                        <Picker x:Name="statusPicker" BackgroundColor="#94A3B8" TextColor="White" HeightRequest="42" WidthRequest="120" Grid.Column="1" VerticalOptions="Center" SelectedIndex="0">
+                            <Picker.Items>
+                                <x:String>All Status</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </Grid>
+                </Frame>
+
+                <Frame BackgroundColor="#1E293B" CornerRadius="12" Padding="20" HasShadow="False" BorderColor="White" HeightRequest="250">
+                    <Grid RowDefinitions="Auto,*,Auto">
+
+                        <HorizontalStackLayout Grid.Row="0" Spacing="8" VerticalOptions="Start">
+                            <Label Text="&#xE7FD;" FontFamily="MaterialIcons" TextColor="#22c55e" FontSize="24" VerticalOptions="Center"/>
+                            <Label Text="Clients ([ClientCount])" TextColor="White" FontSize="24" FontAttributes="Bold" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                            <Label Text="&#xE2C7;" FontFamily="MaterialIcons" FontSize="32" TextColor="#64748B" HorizontalOptions="Center"/>
+                            <Label Text="No customers found matching your search" FontSize="14" TextColor="#64748B" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+
+                    </Grid>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Grid x:Name="Overlay" BackgroundColor="#AA000000" IsVisible="True" Grid.Column="1" ZIndex="20" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+            <VerticalStackLayout VerticalOptions="Center"
+                         HorizontalOptions="Center"
+                         Spacing="20">
+                <Frame BackgroundColor="#1E293B"
+               CornerRadius="12"
+               Padding="20"
+               HasShadow="True">
+                    <VerticalStackLayout Spacing="12"
+                                 HorizontalOptions="Center">
+                        <Label Text="Page Not Available"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center" />
+                        <Label Text="This feature will be available in a future version."
+                       FontSize="14"
+                       TextColor="#94A3B8"
+                       HorizontalOptions="Center" />
+                        <Button x:Name="OverlayButton"
+                        Text="OK"
+                        BackgroundColor="#f59e0b"
+                        TextColor="White"
+                        Padding="12,6"
+                        CornerRadius="8"
+                        Clicked="OverlayButton_Clicked"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

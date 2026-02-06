@@ -1,0 +1,83 @@
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SillowApp.Components.NavMenu"
+             x:Name="NavMenuView"
+             BackgroundColor="#1a2434">
+
+    <Grid Padding="0,20,0,20" RowDefinitions="Auto,*,Auto">
+
+        <HorizontalStackLayout Grid.Row="0" Padding="20,-10,0,30" Spacing="8" VerticalOptions="Center">
+            <Label Text="✨" FontSize="32" TextColor="#fbbf24"/>
+            <Label Text="Sillow" FontSize="30" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
+        </HorizontalStackLayout>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout x:Name="NavBar" Spacing="6" Padding="8">
+
+                <Frame BorderColor="Transparent" x:Name="DashboardItem" CornerRadius="12" Padding="12" BackgroundColor="Transparent" HasShadow="False">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="&#xE871;" FontFamily="MaterialIcons" FontSize="20" TextColor="#b6bfca"/>
+                        <Label Text="Dashboard" TextColor="#b6bfca" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNavTapped" CommandParameter="Dashboard"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+
+                <Frame BorderColor="Transparent" x:Name="JobsItem" CornerRadius="12" Padding="12" BackgroundColor="Transparent" HasShadow="False">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="&#xE8F9;" FontFamily="MaterialIcons" FontSize="20" TextColor="#b6bfca"/>
+                        <Label Text="Jobs" TextColor="#b6bfca" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNavTapped" CommandParameter="Jobs"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+
+                <Frame BorderColor="Transparent" x:Name="CRMItem" CornerRadius="12" Padding="12" BackgroundColor="Transparent" HasShadow="False">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="&#xE853;" FontFamily="MaterialIcons" FontSize="20" TextColor="#b6bfca"/>
+                        <Label Text="CRM" TextColor="#b6bfca" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNavTapped" CommandParameter="CRM"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+
+                <Frame BorderColor="Transparent" x:Name="CalendarItem" CornerRadius="12" Padding="12" BackgroundColor="Transparent" HasShadow="False">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="&#xE878;" FontFamily="MaterialIcons" FontSize="20" TextColor="#b6bfca"/>
+                        <Label Text="Calendar" TextColor="#b6bfca" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNavTapped" CommandParameter="Calendar"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+
+                <Frame BorderColor="Transparent" x:Name="TeamItem" CornerRadius="12" Padding="12" BackgroundColor="Transparent" HasShadow="False">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="&#xE7FB;" FontFamily="MaterialIcons" FontSize="20" TextColor="#b6bfca"/>
+                        <Label Text="Team" TextColor="#b6bfca" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNavTapped" CommandParameter="Team"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="2" Padding="8" Spacing="6">
+            <Frame BorderColor="Transparent" x:Name="SettingsItem" CornerRadius="12" Padding="12" BackgroundColor="Transparent" HasShadow="False">
+                <HorizontalStackLayout Spacing="12">
+                    <Label Text="&#xE8B8;" FontFamily="MaterialIcons" FontSize="20" TextColor="#b6bfca"/>
+                    <Label Text="Settings" TextColor="#b6bfca" FontAttributes="Bold"/>
+                </HorizontalStackLayout>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnNavTapped" CommandParameter="Settings"/>
+                </Frame.GestureRecognizers>
+            </Frame>
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentView>

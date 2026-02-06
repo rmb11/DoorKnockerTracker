@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SillowApp.Styles"
+             xmlns:components="clr-namespace:SillowApp.Components"
+             x:Class="SillowApp.Views.JobsPage"
+             Title="Jobs"
+             BackgroundColor="#101728">
+
+    <ContentPage.Resources>
+        <local:Converters x:Key="Converters" />
+        <local:StatusToColorConverter x:Key="StatusToColorConverter" />
+    </ContentPage.Resources>
+
+    <Grid x:Name="MainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollView x:Name="JobContent" Grid.Column="0">
+            <VerticalStackLayout Padding="20" Spacing="18">
+
+                <VerticalStackLayout Spacing="1">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label x:Name="PageTitle" Text="Jobs" FontSize="32" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
+                        <Button Text="+ Add New Job" BackgroundColor="#F4A825" TextColor="White" FontAttributes="Bold"
+                                Padding="16,8" CornerRadius="8" Grid.Column="1" Clicked="OnAddJobClicked"/>
+                    </Grid>
+                    <Label Text="Manage your service jobs and schedules" FontSize="14" TextColor="#94A3B8"/>
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Spacing="10">
+
+                    <Frame CornerRadius="6" Padding="10,5" HasShadow="False" HeightRequest="45">
+                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                            <Label Text="📜" FontSize="16"
+                                   TextColor="{Binding IsListView, Converter={local:Converters TrueColor='#F4A825', FalseColor='White'}}"/>
+                            <Label Text="List View" FontSize="14"
+                                   TextColor="{Binding IsListView, Converter={local:Converters TrueColor='Black', FalseColor='White'}}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Frame.BackgroundColor>
+                            <Binding Path="IsListView" Converter="{local:Converters FalseColor='#334155'}"/>
+                        </Frame.BackgroundColor>
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleToListViewCommand}"/>
+                        </Frame.GestureRecognizers>
+                    </Frame>
+
+                    <Frame CornerRadius="6" Padding="10,5" HasShadow="False" HeightRequest="45">
+                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                            <Label Text="🗺️" FontSize="16"
+                                   TextColor="{Binding IsMapView, Converter={local:Converters TrueColor='#F4A825', FalseColor='White'}}"/>
+                            <Label Text="Map View" FontSize="14"
+                                   TextColor="{Binding IsMapView, Converter={local:Converters TrueColor='Black', FalseColor='White'}}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Frame.BackgroundColor>
+                            <Binding Path="IsMapView" Converter="{local:Converters FalseColor='#334155'}"/>
+                        </Frame.BackgroundColor>
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleToMapViewCommand}"/>
+                        </Frame.GestureRecognizers>
+                    </Frame>
+
+                </HorizontalStackLayout>
+
+                <Frame BackgroundColor="#1E293B" CornerRadius="12" Padding="20" HasShadow="False"
+                       BorderColor="White" VerticalOptions="Fill" HeightRequest="700">
+                    <Grid>
+
+                        <Grid RowDefinitions="Auto,*" IsVisible="{Binding IsListView}">
+                            <HorizontalStackLayout Grid.Row="0" Spacing="8" VerticalOptions="Start">
+                                <Label Text="🗒️" TextColor="#F4A825" FontSize="24" VerticalOptions="Center"/>
+                                <Label Text="{Binding JobsCount, StringFormat='Jobs List ({0})'}" TextColor="White"
+                                       FontSize="24" FontAttributes="Bold" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+
+                            <CollectionView Grid.Row="1" ItemsSource="{Binding JobsList}" Margin="0,10,0,0"
+                                            SelectionMode="None" HorizontalOptions="Fill">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
+                                </CollectionView.ItemsLayout>
+
+                                <CollectionView.EmptyView>
+                                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center"
+                                                         Spacing="8" Padding="0,50,0,0">
+                                        <Label Text="🔎" FontSize="32"
+                                               TextColor="#64748B" HorizontalOptions="Center"/>
+                                        <Label Text="No jobs found." FontSize="14" TextColor="#64748B"
+                                               HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </CollectionView.EmptyView>
+
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame BackgroundColor="#334155" CornerRadius="8" Padding="15"
+                                               Margin="0,0,0,10" HasShadow="False" HorizontalOptions="Fill">
+                                            <Frame.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding BindingContext.JobSelectedCommand, Source={x:Reference JobContent}}"
+                                                                      CommandParameter="{Binding .}"/>
+                                            </Frame.GestureRecognizers>
+
+                                            <VerticalStackLayout Spacing="10">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                    <Label Grid.Column="0" Text="{Binding JobAddress}" TextColor="White"
+                                                           FontSize="16" FontAttributes="Bold"
+                                                           MaxLines="2" LineBreakMode="WordWrap" VerticalOptions="Center"/>
+                                                    <Frame Grid.Column="1" CornerRadius="4" Padding="8,4"
+                                                           VerticalOptions="Start" HorizontalOptions="End"
+                                                           HasShadow="False" Margin="10,0,0,0">
+                                                        <Frame.BackgroundColor>
+                                                            <Binding Path="Status" Converter="{StaticResource StatusToColorConverter}" />
+                                                        </Frame.BackgroundColor>
+                                                        <Label Text="{Binding Status}" TextColor="White"
+                                                               FontSize="12" FontAttributes="Bold"/>
+                                                    </Frame>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                                                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                                        <Label Text="Customer" TextColor="#F4A825" FontSize="12" FontAttributes="Bold"/>
+                                                        <VerticalStackLayout Spacing="2">
+                                                            <Label Text="{Binding CustomerName, StringFormat='Name: {0}'}"
+                                                                   TextColor="White" FontSize="11" LineBreakMode="TailTruncation"/>
+                                                            <Label Text="{Binding CustomerEmail, StringFormat='Email: {0}'}"
+                                                                   TextColor="White" FontSize="11" LineBreakMode="TailTruncation"/>
+                                                            <Label Text="{Binding CustomerPhone, StringFormat='Phone: {0}'}"
+                                                                   TextColor="White" FontSize="11" LineBreakMode="TailTruncation"/>
+                                                        </VerticalStackLayout>
+                                                    </VerticalStackLayout>
+
+                                                    <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                                        <Label Text="Job Info" TextColor="#F4A825" FontSize="12" FontAttributes="Bold"/>
+                                                        <VerticalStackLayout Spacing="2">
+                                                            <Label Text="{Binding JobDateTime, StringFormat='Date: {0:dd MMM h:mm tt}'}"
+                                                                   TextColor="White" FontSize="11"/>
+                                                            <Label Text="{Binding JobCost, StringFormat='Cost: {0:C}'}"
+                                                                   TextColor="White" FontSize="11"/>
+                                                            <Label Text="{Binding JobNotes, StringFormat='Notes: {0}'}"
+                                                                   TextColor="White" FontSize="11"
+                                                                   LineBreakMode="TailTruncation" MaxLines="2"
+                                                                   IsVisible="{Binding JobNotes, Converter={StaticResource NullToBoolConverter}}"/>
+                                                        </VerticalStackLayout>
+                                                    </VerticalStackLayout>
+                                                </Grid>
+                                            </VerticalStackLayout>
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Grid>
+
+                        <Grid RowDefinitions="40,*" IsVisible="{Binding IsMapView}" VerticalOptions="Fill" HorizontalOptions="Fill">
+                            <HorizontalStackLayout Grid.Row="0" Spacing="8" VerticalOptions="Center">
+                                <Label Text="📍" TextColor="#F4A825"
+                                       FontSize="24" VerticalOptions="Center"/>
+                                <Label Text="Jobs Map" TextColor="White" FontSize="24" FontAttributes="Bold"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+
+                            <WebView x:Name="MapWebView" Grid.Row="1" BackgroundColor="#2D3748"
+                                     Margin="0,10,0,0" VerticalOptions="Fill" HorizontalOptions="Fill"/>
+                        </Grid>
+                    </Grid>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <components:NavMenu x:Name="NavMenuComponent" Grid.Column="0" WidthRequest="200"
+                            HorizontalOptions="Start" ZIndex="10"/>
+
+        <Button x:Name="HamburgerButton" Text="☰" Clicked="HamburgerButton_Clicked"
+                HorizontalOptions="Start" VerticalOptions="Start" Margin="15" WidthRequest="50" HeightRequest="50"
+                BackgroundColor="#1e293b" CornerRadius="8" TextColor="White" FontSize="32"
+                FontAttributes="Bold" Padding="0" ZIndex="100" />
+    </Grid>
+</ContentPage>

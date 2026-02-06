@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:SillowApp.ViewModels"
+             x:DataType="viewmodels:JobEditModalViewModel"
+             x:Class="SillowApp.Views.JobEditModalPage"
+             BackgroundColor="#CC000000">
+
+    <Grid RowDefinitions="*,Auto,Auto" Padding="20">
+
+        <ScrollView Grid.Row="0">
+            <Frame BackgroundColor="#1E2B3D" Padding="20" CornerRadius="12" HorizontalOptions="Center" MaximumWidthRequest="500">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Address" TextColor="White"/>
+                        <Entry Text="{Binding JobToEdit.JobAddress}" Placeholder="Job Address" BackgroundColor="White" TextColor="Black"/>
+
+                        <Label Text="Customer Name" TextColor="White"/>
+                        <Entry Text="{Binding JobToEdit.CustomerName}" Placeholder="Customer Name" BackgroundColor="White" TextColor="Black"/>
+
+                        <Label Text="Customer Email" TextColor="White"/>
+                        <Entry Text="{Binding JobToEdit.CustomerEmail}" Placeholder="Customer Email" Keyboard="Email" BackgroundColor="White" TextColor="Black"/>
+
+                        <Label Text="Customer Phone" TextColor="White"/>
+                        <Entry Text="{Binding JobToEdit.CustomerPhone}" Placeholder="Customer Phone" Keyboard="Telephone" BackgroundColor="White" TextColor="Black"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Job Date &amp; Time" TextColor="White"/>
+                        <DatePicker Date="{Binding JobDate}" TextColor="Black" BackgroundColor="White"/>
+                        <TimePicker Time="{Binding JobTime}" TextColor="Black" BackgroundColor="White"/>
+
+                        <Picker Title="Select Status" TitleColor="White" SelectedItem="{Binding JobToEdit.Status}" BackgroundColor="White" TextColor="Black">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Job Booked</x:String>
+                                    <x:String>In Progress</x:String>
+                                    <x:String>Completed</x:String>
+                                    <x:String>Come Back Later</x:String>
+                                    <x:String>Do Not Return</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+
+                        <Label Text="Notes" TextColor="White"/>
+                        <Editor Text="{Binding JobToEdit.JobNotes}" BackgroundColor="White" TextColor="Black" AutoSize="TextChanges"/>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </Frame>
+        </ScrollView>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+
+            <Button Grid.Column="0" Text="Save Changes" Command="{Binding SaveJobCommand}" BackgroundColor="#F4A825" TextColor="Black" CornerRadius="8"/>
+
+            <Button Grid.Column="1" Text="Close" Command="{Binding CloseModalCommand}" BackgroundColor="#334155" TextColor="White" CornerRadius="8"/>
+        </Grid>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+
+            <Button Grid.Column="0" Text="Completed" Command="{Binding CompleteJobCommand}" BackgroundColor="#16A34A" TextColor="White" CornerRadius="8"/>
+
+            <Button Grid.Column="1" Text="Delete Job" Command="{Binding DeleteJobCommand}" BackgroundColor="#B91C1C" TextColor="White" CornerRadius="8"/>
+        </Grid>
+
+    </Grid>
+</ContentPage>

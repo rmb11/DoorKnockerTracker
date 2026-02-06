@@ -1,0 +1,462 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps with Status Markers and Job Details</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #statusSelector {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            z-index: 10;
+            font-family: Arial, sans-serif;
+            border-radius: 4px;
+            user-select: none;
+        }
+
+            #statusSelector p {
+                margin: 0 0 8px 0;
+                font-weight: bold;
+            }
+
+            #statusSelector button {
+                margin: 2px;
+                padding: 6px 12px;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+                #statusSelector button:hover {
+                    opacity: 0.8;
+                }
+
+                #statusSelector button.cancel {
+                    background: #eee;
+                    color: #333;
+                }
+
+                #statusSelector button.jobbooked {
+                    background: green;
+                    color: white;
+                }
+
+                #statusSelector button.comebacklater {
+                    background: goldenrod;
+                    color: white;
+                }
+
+                #statusSelector button.donotreturn {
+                    background: red;
+                    color: white;
+                }
+
+        /* Modal styles */
+        #jobModal {
+            display: none;
+            position: fixed;
+            z-index: 20;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            font-family: Arial, sans-serif;
+        }
+
+        #jobModalContent {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 320px;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+            #jobModalContent h2 {
+                margin-top: 0;
+            }
+
+            #jobModalContent label {
+                display: block;
+                margin-top: 10px;
+                font-weight: bold;
+            }
+
+            #jobModalContent input, #jobModalContent textarea {
+                width: 100%;
+                padding: 6px;
+                margin-top: 4px;
+                box-sizing: border-box;
+                border-radius: 3px;
+                border: 1px solid #ccc;
+                font-size: 14px;
+            }
+
+            #jobModalContent textarea {
+                resize: vertical;
+            }
+
+            #jobModalContent button {
+                margin-top: 15px;
+                padding: 8px 16px;
+                font-size: 15px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+                #jobModalContent button.submitBtn {
+                    background-color: green;
+                    color: white;
+                    margin-right: 10px;
+                }
+
+                #jobModalContent button.cancelBtn {
+                    background-color: #ccc;
+                    color: #333;
+                }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
+    <script>
+        let map;
+        let markers = [];
+        let pendingClickLatLng = null;
+        let geocoder;
+
+        const statusColors = {
+            "job booked": "green",
+            "come back later": "yellow",
+            "do not return": "red"
+        };
+
+        function initMap() {
+            geocoder = new google.maps.Geocoder();
+            const userLocation = { lat: %%lat%%, lng: %%long%% };
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: userLocation
+            });
+
+            // Marker for user location
+            new google.maps.Marker({
+                position: userLocation,
+                map: map,
+                title: "Your Location"
+            });
+
+            // Add marker on map click and show status selector
+            map.addListener("click", (e) => {
+                pendingClickLatLng = e.latLng;
+                showStatusSelector(e.pixel);
+            });
+        }
+
+        function addMarker(location, status, jobDetails = null) {
+            const marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 10,
+                    fillColor: statusColors[status],
+                    fillOpacity: 1,
+                    strokeWeight: 1,
+                    strokeColor: "black"
+                },
+                title: status
+            });
+
+            const markerData = {
+                lat: location.lat(),
+                lng: location.lng(),
+                status: status
+            };
+
+            if (jobDetails) {
+                const customerName = jobDetails.customerName || jobDetails.CustomerName;
+                const jobAddress = jobDetails.jobAddress || jobDetails.JobAddress;
+
+                let infoContent = '';
+
+                if (customerName || jobAddress) {
+                    infoContent = `
+                <strong>${customerName || 'Customer Info'}</strong>
+                <br>
+                ${jobAddress || 'Address not available'}
+                    `;
+                } else {
+                    const title = jobDetails.title || jobDetails.Title;
+                    const description = jobDetails.description || jobDetails.Description;
+                    infoContent = `<strong>${title}</strong><br>${description || ""}`;
+                }
+
+                const infoWindow = new google.maps.InfoWindow({
+                    content: infoContent
+                });
+
+                marker.addListener("click", () => infoWindow.open(map, marker));
+            }
+
+            markers.push(markerData);
+        }
+
+        function showStatusSelector(pixel) {
+            const selector = document.getElementById("statusSelector");
+            selector.style.left = pixel.x + "px";
+            selector.style.top = pixel.y + "px";
+            selector.style.display = "block";
+        }
+
+        function hideStatusSelector() {
+            const selector = document.getElementById("statusSelector");
+            selector.style.display = "none";
+        }
+
+        function selectStatus(status) {
+            hideStatusSelector();
+
+            if (!pendingClickLatLng) {
+                console.error("No pending location to save.");
+                return;
+            }
+
+            // All markers regardless of status need to get the address first.
+            geocoder.geocode({ location: pendingClickLatLng }, (results, geoStatus) => {
+                let address = "";   
+                if (geoStatus === "OK" && results[0]) {
+                    address = results[0].formatted_address;
+                } else {
+                    console.warn("Geocoder failed to find address, using coordinates.");
+                    address = `Lat: ${pendingClickLatLng.lat().toFixed(6)}, Lng: ${pendingClickLatLng.lng().toFixed(6)}`;
+                }
+
+                // Handle 'job booked' status (show modal)
+                if (status === "job booked") {
+                    // Fill the modal form with the retrieved address and show it
+                    document.getElementById("jobAddress").value = address;
+                    showJobModal();
+
+                } else if (statusColors[status]) {
+                    // Handle 'come back later' and 'do not return' (save directly)
+                    const normalizedStatus = status.charAt(0).toUpperCase() + status.slice(1);
+
+                    const jobDetails = {
+                        // Set the Title to the address for quick identification in the list
+                        title: address.substring(0, 50) + (address.length > 50 ? '...' : ''), // Use address as title for quick view
+                        description: `Knock status recorded: ${normalizedStatus}`,
+                        status: normalizedStatus,
+                        createdAt: new Date().toISOString(),
+                        latitude: pendingClickLatLng.lat(),
+                        longitude: pendingClickLatLng.lng(),
+
+                        jobAddress: address,
+                        customerName: null,
+                        customerEmail: null,
+                        customerPhone: null,
+                        jobNotes: null
+                    };
+
+                    const json = JSON.stringify(jobDetails);
+
+                    // Send the Job data to the C# bridge for saving
+                    if (window.chrome && window.chrome.webview) {
+                        // Windows
+                        window.chrome.webview.postMessage(json);
+                    } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.jsBridge) {
+                        // iOS
+                        window.webkit.messageHandlers.jsBridge.postMessage(json);
+                    } else {
+                        // Android fallback
+                        window.location.href = "jsbridge:" + encodeURIComponent(json);
+                    }
+
+                    addMarker(pendingClickLatLng, status);
+                }
+
+                if (statusColors[status] && status !== "job booked") {
+                    pendingClickLatLng = null; 
+                }
+            });
+        }
+
+        function showJobModal() {
+            const modal = document.getElementById("jobModal");
+            modal.style.display = "block";
+        }
+
+        function hideJobModal() {
+            const modal = document.getElementById("jobModal");
+            modal.style.display = "none";
+            clearJobForm();
+            pendingClickLatLng = null;
+        }
+
+        function clearJobForm() {
+            document.getElementById("jobAddress").value = "";
+            document.getElementById("customerName").value = "";
+            document.getElementById("customerEmail").value = "";
+            document.getElementById("customerPhone").value = "";
+            document.getElementById("jobDateTime").value = "";
+            document.getElementById("jobCost").value = "";
+            document.getElementById("jobNotes").value = "";
+        }
+
+        function submitJobForm() {
+            const address = document.getElementById("jobAddress").value.trim();
+            const name = document.getElementById("customerName").value.trim();
+            const email = document.getElementById("customerEmail").value.trim();
+            const phone = document.getElementById("customerPhone").value.trim();
+            const jobDateTime = document.getElementById("jobDateTime").value.trim();
+            const jobCost = document.getElementById("jobCost").value.trim();
+            const notes = document.getElementById("jobNotes").value.trim();
+
+            if (!address) {
+                alert("Please enter the house address.");
+                return;
+            }
+            if (!name) {
+                alert("Please enter the customer name.");
+                return;
+            }
+
+            const jobDetails = {
+                title: name + " - " + address,
+                description: notes || "",
+                status: "Job Booked",
+                createdAt: new Date().toISOString(),
+                latitude: pendingClickLatLng ? pendingClickLatLng.lat() : null,
+                longitude: pendingClickLatLng ? pendingClickLatLng.lng() : null,
+                jobAddress: address,
+                customerName: name,
+                customerEmail: email || null,
+                customerPhone: phone || null,
+                jobNotes: notes || null,
+                jobDateTime: jobDateTime ? new Date(jobDateTime).toISOString() : null,
+                jobCost: jobCost ? parseFloat(jobCost) : null
+            };
+
+            const json = JSON.stringify(jobDetails);
+
+            // Send to C# bridge
+            if (window.chrome && window.chrome.webview) {
+                // Windows
+                window.chrome.webview.postMessage(json);
+            } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.jsBridge) {
+                // iOS
+                window.webkit.messageHandlers.jsBridge.postMessage(json);
+            } else {
+                // Android fallback
+                window.location.href = "jsbridge:" + encodeURIComponent(json);
+            }
+
+            if (pendingClickLatLng) {
+                addMarker(pendingClickLatLng, "job booked", jobDetails);
+            }
+
+            hideJobModal();
+        }
+
+        function cancelJobForm() {
+            hideJobModal();
+        }
+
+        function loadMarkers(markersJsonString) {
+            if (!map) {
+                console.error("Google Map is not yet initialized. Cannot load markers.");
+                return;
+            }
+
+            try {
+                const jobsArray = JSON.parse(markersJsonString);
+
+                if (jobsArray && jobsArray.length > 0) {
+                    jobsArray.forEach(jobData => {
+                        const position = {
+                            lat: jobData.Latitude,
+                            lng: jobData.Longitude
+                        };
+
+                        addMarker(
+                            new google.maps.LatLng(position.lat, position.lng),
+                            jobData.Status.toLowerCase(), 
+                            jobData
+                        );
+                    });
+
+                    console.log(`Successfully loaded ${jobsArray.length} saved jobs as markers.`);
+
+                    const firstJob = jobsArray[0];
+                    map.setCenter({ lat: firstJob.Latitude, lng: firstJob.Longitude });
+                }
+            } catch (e) {
+                console.error("Failed to parse JSON or draw markers:", e);
+            }
+        }
+
+        function getMarkersJson() {
+            return JSON.stringify(markers);
+        }
+
+        // Close modal if user clicks outside modal content
+        window.onclick = function (event) {
+            const modal = document.getElementById("jobModal");
+            if (event.target === modal) {
+                hideJobModal();
+            }
+        }
+    </script>
+</head>
+<body onload="initMap()">
+    <div id="map"></div>
+
+    <div id="statusSelector">
+        <p>Select status:</p>
+        <button class="jobbooked" onclick="selectStatus('job booked')">Job Booked</button>
+        <button class="comebacklater" onclick="selectStatus('come back later')">Come Back Later</button>
+        <button class="donotreturn" onclick="selectStatus('do not return')">Do Not Return</button>
+        <button class="cancel" onclick="selectStatus(null)">Cancel</button>
+    </div>
+
+    <div id="jobModal">
+        <div id="jobModalContent">
+            <h2>New Job Details</h2> <label for="jobAddress">House Address *</label>
+            <input type="text" id="jobAddress" placeholder="Enter house address" required />
+
+            <label for="customerName">Customer Name *</label>
+            <input type="text" id="customerName" placeholder="Enter customer name" required />
+
+            <label for="customerEmail">Customer Email</label>
+            <input type="email" id="customerEmail" placeholder="Enter customer email" />
+
+            <label for="customerPhone">Customer Phone</label>
+            <input type="tel" id="customerPhone" placeholder="Enter customer phone" />
+
+            <label for="jobDateTime">Job Date & Time</label>
+            <input type="datetime-local" id="jobDateTime" />
+
+            <label for="jobCost">Job Cost ($)</label>
+            <input type="number" id="jobCost" placeholder="Enter job cost" step="0.01" min="0" />
+
+            <label for="jobNotes">Job Notes</label>
+            <textarea id="jobNotes" rows="2" placeholder="Enter job notes"></textarea>
+
+            <button class="submitBtn" onclick="submitJobForm()">Add Job</button>
+            <button class="cancelBtn" onclick="cancelJobForm()">Cancel</button>
+        </div>
+    </div>
+</body>
+</html>
